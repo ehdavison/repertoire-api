@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS repertoire;
-CREATE DATABASE repertoire;
-CREATE USER repertoire_user WITH PASSWORD "password";
-GRANT ALL PRIVILEGES ON DATABASE repertoire TO repertoire_user
+DROP DATABASE IF EXISTS songs;
+CREATE DATABASE songs;
+CREATE USER songs_user WITH PASSWORD "password";
+GRANT ALL PRIVILEGES ON DATABASE songs TO songs_user;

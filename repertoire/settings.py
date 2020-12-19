@@ -63,8 +63,6 @@ SECRET_KEY = os.getenv('SECRET')
 # Application definition
 
 INSTALLED_APPS = [
-    # Our custom apps
-    'api',
     # DRF
     'rest_framework',
     'rest_framework.authtoken',
@@ -76,6 +74,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'songs',
+    # Our custom apps
+    'api',
 ]
 
 MIDDLEWARE = [
