@@ -1,2 +1,4 @@
-DROP DATABASE IF EXISTS <project-name-here>;
-CREATE DATABASE <project-name-here>;
+DROP DATABASE IF EXISTS repertoire;
+CREATE DATABASE repertoire;
+CREATE USER repertoire_user WITH PASSWORD "password";
+GRANT ALL PRIVILEGES ON DATABASE repertoire TO repertoire_user

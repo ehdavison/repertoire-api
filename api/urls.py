@@ -3,7 +3,7 @@ from .views.mango_views import Mangos, MangoDetail
 from .views.user_views import SignUp, SignIn, SignOut, ChangePassword
 
 urlpatterns = [
-  	# Restful routing
+    # Restful routing
     path('mangos/', Mangos.as_view(), name='mangos'),
     path('mangos/<int:pk>/', MangoDetail.as_view(), name='mango_detail'),
     path('sign-up/', SignUp.as_view(), name='sign-up'),

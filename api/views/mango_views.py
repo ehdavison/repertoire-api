@@ -11,9 +11,12 @@ from ..models.mango import Mango
 from ..serializers import MangoSerializer, UserSerializer
 
 # Create your views here.
+
+
 class Mangos(generics.ListCreateAPIView):
-    permission_classes=(IsAuthenticated,)
+    # permission_classes=(IsAuthenticated,)
     serializer_class = MangoSerializer
+
     def get(self, request):
         """Index request"""
         # Get all the mangos:
@@ -22,7 +25,7 @@ class Mangos(generics.ListCreateAPIView):
         mangos = Mango.objects.filter(owner=request.user.id)
         # Run the data through the serializer
         data = MangoSerializer(mangos, many=True).data
-        return Response({ 'mangos': data })
+        return Response({'mangos': data})
 
     def post(self, request):
         """Create request"""
@@ -34,12 +37,14 @@ class Mangos(generics.ListCreateAPIView):
         if mango.is_valid():
             # Save the created mango & send a response
             mango.save()
-            return Response({ 'mango': mango.data }, status=status.HTTP_201_CREATED)
+            return Response({'mango': mango.data}, status=status.HTTP_201_CREATED)
         # If the data is not valid, return a response with the errors
         return Response(mango.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class MangoDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes=(IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, pk):
         """Show request"""
         # Locate the mango to show
@@ -50,7 +55,7 @@ class MangoDetail(generics.RetrieveUpdateDestroyAPIView):
 
         # Run the data through the serializer so it's formatted
         data = MangoSerializer(mango).data
-        return Response({ 'mango': data })
+        return Response({'mango': data})
 
     def delete(self, request, pk):
         """Delete request"""
