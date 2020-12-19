@@ -47,7 +47,13 @@ else:
 # Default database as defined above depending on development
 # or production environment
 DATABASES = {
-    'default': DB
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'songs',
+        'USER': 'songs_user',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+    }
 }
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
