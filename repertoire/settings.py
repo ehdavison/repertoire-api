@@ -30,7 +30,8 @@ if os.getenv('ENV') == 'development':
     # Set debug to true
     DEBUG = True
     # Only allow locally running client at port 7165 for CORS
-    CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:7165', 'http://localhost:7165']
+    CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:7165',
+                             'http://localhost:7165', 'https://ehdavison.github.io']
 else:
     # If we are on production, use the dj_database_url package
     # to locate the database based on Heroku setup
@@ -94,6 +95,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'repertoire.urls'
@@ -181,3 +183,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Use the custom user model as the auth user for the admin view
 AUTH_USER_MODEL = 'api.User'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
