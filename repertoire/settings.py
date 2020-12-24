@@ -31,7 +31,7 @@ if os.getenv('ENV') == 'development':
     DEBUG = True
     # Only allow locally running client at port 7165 for CORS
     CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:7165',
-                             'http://localhost:7165', 'https://ehdavison.github.io', 'https://repertoire-ed.herokuapp.com/']
+                             'http://localhost:7165', ]
 else:
     # If we are on production, use the dj_database_url package
     # to locate the database based on Heroku setup
@@ -48,13 +48,7 @@ else:
 # Default database as defined above depending on development
 # or production environment
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'songs',
-        'USER': 'songs_user',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-    }
+    'default': DB
 }
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
