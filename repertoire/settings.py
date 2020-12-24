@@ -31,7 +31,7 @@ if os.getenv('ENV') == 'development':
     DEBUG = True
     # Only allow locally running client at port 7165 for CORS
     CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:7165',
-                             'http://localhost:7165', 'https://ehdavison.github.io']
+                             'http://localhost:7165', 'https://ehdavison.github.io', 'https://repertoire-ed.herokuapp.com/']
 else:
     # If we are on production, use the dj_database_url package
     # to locate the database based on Heroku setup
