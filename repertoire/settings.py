@@ -30,7 +30,8 @@ if os.getenv('ENV') == 'development':
     # Set debug to true
     DEBUG = True
     # Only allow locally running client at port 7165 for CORS
-    CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:7165', 'http://localhost:7165']
+    CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:7165',
+                             'http://localhost:7165', 'https://ehdavison.github.io']
 else:
     # If we are on production, use the dj_database_url package
     # to locate the database based on Heroku setup
@@ -47,7 +48,13 @@ else:
 # Default database as defined above depending on development
 # or production environment
 DATABASES = {
-    'default': DB
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'songs',
+        'USER': 'songs_user',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+    }
 }
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -63,8 +70,6 @@ SECRET_KEY = os.getenv('SECRET')
 # Application definition
 
 INSTALLED_APPS = [
-    # Our custom apps
-    'api',
     # DRF
     'rest_framework',
     'rest_framework.authtoken',
@@ -76,6 +81,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'songs',
+    # Our custom apps
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +95,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'repertoire.urls'
@@ -122,10 +131,11 @@ WSGI_APPLICATION = 'repertoire.wsgi.application'
 # These can be overridden on individual views
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication'
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated'
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }
 
@@ -173,3 +183,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Use the custom user model as the auth user for the admin view
 AUTH_USER_MODEL = 'api.User'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

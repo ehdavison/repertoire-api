@@ -8,6 +8,9 @@ from django.contrib.auth import get_user, authenticate, login, logout
 
 from ..serializers import UserSerializer, UserRegisterSerializer,  ChangePasswordSerializer
 from ..models.user import User
+from rest_framework.permissions import IsAdminUser
+from songs.permissions import IsSelfOrAdmin
+
 
 class SignUp(generics.CreateAPIView):
     # Override the authentication/permissions classes so this endpoint
@@ -29,11 +32,12 @@ class SignUp(generics.CreateAPIView):
             if created_user.is_valid():
                 # Save the user and send back a response!
                 created_user.save()
-                return Response({ 'user': created_user.data }, status=status.HTTP_201_CREATED)
+                return Response({'user': created_user.data}, status=status.HTTP_201_CREATED)
             else:
                 return Response(created_user.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class SignIn(generics.CreateAPIView):
     # Override the authentication/permissions classes so this endpoint
@@ -50,7 +54,8 @@ class SignIn(generics.CreateAPIView):
         # We can pass our email and password along with the request to the
         # `authenticate` method. If we had used the default user, we would need
         # to send the `username` instead of `email`.
-        user = authenticate(request, email=creds['email'], password=creds['password'])
+        user = authenticate(
+            request, email=creds['email'], password=creds['password'])
         # Is our user is successfully authenticated...
         if user is not None:
             # And they're active...
@@ -66,9 +71,10 @@ class SignIn(generics.CreateAPIView):
                     }
                 })
             else:
-                return Response({ 'msg': 'The account is inactive.' }, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'msg': 'The account is inactive.'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({ 'msg': 'The username and/or password is incorrect.' }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            return Response({'msg': 'The username and/or password is incorrect.'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
 
 class SignOut(generics.DestroyAPIView):
     def delete(self, request):
@@ -78,16 +84,18 @@ class SignOut(generics.DestroyAPIView):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class ChangePassword(generics.UpdateAPIView):
     def partial_update(self, request):
         user = request.user
         # Pass data through serializer
-        serializer = ChangePasswordSerializer(data=request.data['passwords'])
+        serializer = ChangePasswordSerializer(
+            data=request.data['passwords'])
         if serializer.is_valid():
             # This is included with the Django base user model
             # https://docs.djangoproject.com/en/3.1/ref/contrib/auth/#django.contrib.auth.models.User.check_password
             if not user.check_password(serializer.data['old']):
-                return Response({ 'msg': 'Wrong password' }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                return Response({'msg': 'Wrong password'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
             # set_password will also hash the password
             # https://docs.djangoproject.com/en/3.1/ref/contrib/auth/#django.contrib.auth.models.User.set_password
@@ -97,3 +105,15 @@ class ChangePassword(generics.UpdateAPIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserList(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsSelfOrAdmin]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
